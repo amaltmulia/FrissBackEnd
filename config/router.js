@@ -17,8 +17,8 @@ module.exports = function(app) {
     // User Object
     var users = require('../controller/system/users');
     app.route('/users').get(users._listing);
-    app.route('/users/:id').get(users._view);
-
+    app.route('/users/view/:id').get(users._view);
+    app.route('/users/my-profile').get(users.myProfile);
 
     // Page Not Found
     /* app.get('*', function(req, res){

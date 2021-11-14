@@ -81,3 +81,35 @@ exports._view = function(req, res) {
         }
     });
 };
+
+exports.myProfile = function(req, res) {
+    var qUser = "SELECT u.user_name, u.email, r.role_name role, m.full_name, m.photo FROM fmusers u ";
+    qUser += " INNER JOIN fmroles r ON r.id = u.role_id";
+    qUser += " LEFT JOIN fdmember m ON u.id = m.user_id";
+    qUser += " WHERE 1=1 AND u.user_name = ?";
+    var arrParam = [req.session.uname];
+
+    query.execute(qUser, arrParam, function (error, rows, fields) {
+        if(error){
+            let errors = [
+                error.code,
+                error.sqlMessage,
+                error.sql
+            ];
+            response.failed(res, {status:500, message:"Something Wrong", errors:errors});
+        } else {
+            if(!rows.length) {
+                response.failed(res, {status:404, message:"Data Not Found"});
+            } else {
+                let me = {
+                    username: req.session.uname,
+                    email: req.session.email,
+                    full_name: rows[0].full_name ? rows[0].full_name : req.session.uname.toUpperCase(),
+                    role: rows[0].role,
+                    photo: rows[0].photo
+                }
+                response.ok(res, {data:me});
+            }
+        }
+    })
+};

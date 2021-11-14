@@ -58,7 +58,7 @@ exports.login = function(req, res) {
               username : username,
               email : userdata.email,
               role : userdata.role_name,
-              name : userdata.full_name || username,
+              name : userdata.full_name || username.toUpperCase(),
               photo : userdata.photo || "",
               token : token
             }
@@ -76,7 +76,6 @@ exports.login = function(req, res) {
     retvar.errors.push("Invalid Username or Password");
     response.failed(res, retvar);
   }
-  
 };
 
 exports.logout = function(req, res) {
@@ -120,4 +119,8 @@ exports.checkToken = function(req, res) {
   }
 
   response.ok(res, {data:retvar})
+};
+
+exports.getSession = function(req, res) {
+  response.ok(res, {data:req.session})
 };

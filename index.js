@@ -3,6 +3,7 @@ var express = require('express'),
     port = process.env.PORT || 3000,
     bodyParser = require('body-parser'),
     jwt = require('jsonwebtoken'),
+    cors = require('cors'),
     session = require('express-session');
 
 app.use(session({
@@ -13,22 +14,27 @@ app.use(session({
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
+app.use(cors({
+  origin: 'http://localhost:5000',
+  methods: ['POST', 'PUT', 'GET', 'OPTIONS', 'HEAD'],
+  credentials: true
+}));
+
+//app.use(cors());
+
 app.use(function (req, res, next) {
   // this is middleware
   let nzone = [
     "/",
     "/debug",
-    "/auth/login"
+    "/auth/login",
+    "/auth/check-token"
   ];
   
   let bypassToken = [
     "/auth/logout",
     "/auth/refresh-token",
   ];
-
-  if(req.headers.debug) {
-    nzone.push("/auth/check-token")
-  }
 
   if(nzone.includes(req.originalUrl)) {
     return next();
