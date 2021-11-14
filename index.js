@@ -1,6 +1,6 @@
 var express = require('express'),
     app = express(),
-    port = process.env.PORT || 3000,
+    port = process.env.PORT || 8080,
     bodyParser = require('body-parser'),
     jwt = require('jsonwebtoken'),
     cors = require('cors'),
@@ -64,5 +64,6 @@ app.use(function (req, res, next) {
 var routes = require('./config/router');
 routes(app);
 
-app.listen(port);
-console.log('Server Started on: ' + port);
+app.listen(port, () => {
+  console.log('Server Started on: ' + port);
+});
